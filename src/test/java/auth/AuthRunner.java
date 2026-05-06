@@ -1,4 +1,4 @@
-﻿package auth;
+package auth;
 
 import com.intuit.karate.junit5.Karate;
 

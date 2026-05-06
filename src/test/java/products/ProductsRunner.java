@@ -1,4 +1,4 @@
-﻿package products;
+package products;
 
 import com.intuit.karate.junit5.Karate;
 

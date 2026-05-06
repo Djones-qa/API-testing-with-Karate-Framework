@@ -1,4 +1,4 @@
-﻿package performance;
+package performance;
 
 import com.intuit.karate.junit5.Karate;
 

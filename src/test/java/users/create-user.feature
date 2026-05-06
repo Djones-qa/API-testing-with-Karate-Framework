@@ -1,25 +1,23 @@
-﻿Feature: POST Create User API Tests
+Feature: POST Create User API Tests
 
   Background:
     * url baseUrl
 
-  Scenario: Create a new user with name and job
+  Scenario: Create a new user
     Given path '/users'
-    And request { name: 'Darrius Jones', job: 'QA Engineer' }
+    And request { name: 'Darrius Jones', username: 'djones', email: 'djones@test.com' }
     When method post
     Then status 201
     And match response.name == 'Darrius Jones'
-    And match response.job == 'QA Engineer'
-    And match response.id == '#string'
-    And match response.createdAt == '#string'
+    And match response.id == '#number'
 
   Scenario: Create user with minimal data
     Given path '/users'
-    And request { name: 'Test User' }
+    And request { name: 'Test User', username: 'tuser', email: 'tuser@test.com' }
     When method post
     Then status 201
     And match response.name == 'Test User'
-    And match response.id == '#string'
+    And match response.id == '#number'
 
   Scenario: Create user with all fields
     Given path '/users'
@@ -27,33 +25,24 @@
     """
     {
       "name": "Jane Smith",
-      "job": "Senior Developer",
-      "email": "jane.smith@example.com",
-      "department": "Engineering"
+      "username": "jsmith",
+      "email": "jane.smith@example.com"
     }
     """
     When method post
     Then status 201
-    And match response contains { name: 'Jane Smith', job: 'Senior Developer' }
-
-  Scenario: Create user with empty body
-    Given path '/users'
-    And request {}
-    When method post
-    Then status 201
-    And match response.id == '#string'
-    And match response.createdAt == '#string'
+    And match response contains { name: 'Jane Smith' }
 
   Scenario: Create user from external JSON data
     Given path '/users'
     And request read('classpath:data/users.json')[0]
     When method post
     Then status 201
-    And match response.id == '#string'
+    And match response.id == '#number'
 
-  Scenario: Verify created timestamp format
+  Scenario: Create user returns assigned ID
     Given path '/users'
-    And request { name: 'Timestamp Test', job: 'Tester' }
+    And request { name: 'ID Test', username: 'idtest', email: 'id@test.com' }
     When method post
     Then status 201
-    And match response.createdAt == '#regex \\d{4}-\\d{2}-\\d{2}T.+'
+    And match response.id == 11

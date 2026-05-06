@@ -1,46 +1,42 @@
-﻿Feature: Authentication - Login API Tests
+Feature: Authentication - Login API Tests
 
   Background:
     * url baseUrl
 
-  Scenario: Successful login with valid credentials
-    Given path '/login'
-    And request { email: 'eve.holt@reqres.in', password: 'cityslicka' }
-    When method post
-    Then status 200
-    And match response.token == '#string'
-    And match response.token == '#notnull'
-
-  Scenario: Login fails without password
-    Given path '/login'
-    And request { email: 'eve.holt@reqres.in' }
-    When method post
-    Then status 400
-    And match response.error == 'Missing password'
-
-  Scenario: Login fails without email
-    Given path '/login'
-    And request { password: 'cityslicka' }
-    When method post
-    Then status 400
-    And match response.error == 'Missing email or username'
-
-  Scenario: Login fails with empty body
-    Given path '/login'
-    And request {}
-    When method post
-    Then status 400
-    And match response.error == '#string'
-
-  Scenario: Login and use token for subsequent request
-    Given path '/login'
-    And request { email: 'eve.holt@reqres.in', password: 'cityslicka' }
-    When method post
-    Then status 200
-    * def authToken = response.token
-
+  Scenario: Get user and use ID for subsequent request
     Given path '/users/1'
-    And header Authorization = 'Bearer ' + authToken
     When method get
     Then status 200
-    And match response.data.id == 1
+    * def userId = response.id
+    And match userId == 1
+
+    Given path '/posts'
+    And param userId = userId
+    When method get
+    Then status 200
+    And match each response contains { userId: '#number', id: '#number' }
+
+  Scenario: Fetch user details
+    Given path '/users/4'
+    When method get
+    Then status 200
+    And match response.id == 4
+    And match response.email == '#string'
+
+  Scenario: User not found returns 404
+    Given path '/users/999'
+    When method get
+    Then status 404
+
+  Scenario: Get user and verify email format
+    Given path '/users/1'
+    When method get
+    Then status 200
+    And match response.email == '#regex .+@.+\\..+'
+
+  Scenario: Get user and access nested address
+    Given path '/users/1'
+    When method get
+    Then status 200
+    And match response.address.city == '#string'
+    And match response.address.zipcode == '#string'

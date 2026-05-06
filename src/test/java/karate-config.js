@@ -1,4 +1,4 @@
-﻿function fn() {
+function fn() {
   var env = karate.env;
   karate.log('karate.env system property:', env);
 
@@ -8,18 +8,10 @@
 
   var config = {
     env: env,
-    baseUrl: 'https://reqres.in/api',
+    baseUrl: 'https://jsonplaceholder.typicode.com',
     connectTimeout: 10000,
     readTimeout: 15000
   };
-
-  if (env === 'dev') {
-    config.baseUrl = 'https://reqres.in/api';
-  } else if (env === 'staging') {
-    config.baseUrl = 'https://reqres.in/api';
-  } else if (env === 'prod') {
-    config.baseUrl = 'https://reqres.in/api';
-  }
 
   karate.configure('connectTimeout', config.connectTimeout);
   karate.configure('readTimeout', config.readTimeout);

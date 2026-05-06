@@ -1,34 +1,36 @@
-﻿Feature: Data-Driven Resource Tests
+Feature: Data-Driven Post Tests
 
   Background:
     * url baseUrl
     * def testData = read('classpath:data/products.json')
 
-  Scenario: Validate all resources from test data
+  Scenario: Validate posts exist for IDs in test data
     * def ids = karate.jsonPath(testData, '$[*].id')
-    Given path '/unknown'
+    Given path '/posts'
+    And param _limit = 10
     When method get
     Then status 200
-    And match response.data[*].id contains any ids
+    And match response[*].id contains any ids
 
-  Scenario Outline: Verify resource names from data file
-    Given path '/unknown/<id>'
+  Scenario Outline: Verify posts by ID from data file
+    Given path '/posts/<id>'
     When method get
     Then status 200
-    And match response.data.name == '<name>'
+    And match response.id == <id>
 
     Examples:
-      | id | name            |
-      | 1  | cerulean        |
-      | 2  | fuchsia rose    |
-      | 3  | true red        |
-      | 4  | aqua sky        |
-      | 5  | tigerlily       |
-      | 6  | blue turquoise  |
+      | id |
+      | 1  |
+      | 2  |
+      | 3  |
+      | 4  |
+      | 5  |
+      | 6  |
 
-  Scenario: Search resources and filter by year
-    Given path '/unknown'
+  Scenario: Filter posts by userId
+    Given path '/posts'
+    And param userId = 1
     When method get
     Then status 200
-    * def recentResources = karate.filter(response.data, function(x){ return x.year >= 2002 })
-    And match each recentResources contains { year: '#number? _ >= 2002' }
+    And match each response contains { userId: 1 }
+    And match response == '#[_ > 0]'

@@ -1,7 +1,7 @@
-﻿[
-  { "name": "Alice Johnson", "job": "Software Engineer", "email": "alice@example.com" },
-  { "name": "Bob Martinez", "job": "QA Lead", "email": "bob@example.com" },
-  { "name": "Carol Williams", "job": "Product Manager", "email": "carol@example.com" },
-  { "name": "David Chen", "job": "DevOps Engineer", "email": "david@example.com" },
-  { "name": "Eva Brown", "job": "Data Analyst", "email": "eva@example.com" }
+[
+  { "name": "Alice Johnson", "username": "alicej", "email": "alice@example.com" },
+  { "name": "Bob Martinez", "username": "bobm", "email": "bob@example.com" },
+  { "name": "Carol Williams", "username": "carolw", "email": "carol@example.com" },
+  { "name": "David Chen", "username": "davidc", "email": "david@example.com" },
+  { "name": "Eva Brown", "username": "evab", "email": "eva@example.com" }
 ]

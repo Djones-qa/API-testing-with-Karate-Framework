@@ -1,4 +1,4 @@
-﻿@ignore
+@ignore
 Feature: Helper - Create a single user (called from other features)
 
   Background:
@@ -6,6 +6,6 @@ Feature: Helper - Create a single user (called from other features)
 
   Scenario: Create user
     Given path '/users'
-    And request { name: '#(name)', job: '#(job)' }
+    And request { name: '#(name)', username: '#(username)', email: '#(email)' }
     When method post
     Then status 201

@@ -1,62 +1,58 @@
-﻿Feature: GET Resources (Products) API Tests
+Feature: GET Posts (Products) API Tests
 
   Background:
     * url baseUrl
 
-  Scenario: Get list of resources
-    Given path '/unknown'
+  Scenario: Get list of posts
+    Given path '/posts'
     When method get
     Then status 200
-    And match response.data == '#[6]'
-    And match each response.data contains { id: '#number', name: '#string', year: '#number', color: '#string', pantone_value: '#string' }
+    And match response == '#[100]'
+    And match each response contains { id: '#number', userId: '#number', title: '#string', body: '#string' }
 
-  Scenario: Get single resource by ID
-    Given path '/unknown/2'
+  Scenario: Get single post by ID
+    Given path '/posts/1'
     When method get
     Then status 200
-    And match response.data.id == 2
-    And match response.data.name == '#string'
-    And match response.data.year == '#number'
-    And match response.data.color == '#regex #[0-9a-fA-F]{6}'
+    And match response.id == 1
+    And match response.userId == '#number'
+    And match response.title == '#string'
+    And match response.body == '#string'
 
-  Scenario: Get resource with invalid ID returns 404
-    Given path '/unknown/999'
+  Scenario: Get post with invalid ID returns 404
+    Given path '/posts/999'
     When method get
     Then status 404
-    And match response == {}
 
-  Scenario: Validate resource schema
-    Given path '/unknown/1'
+  Scenario: Validate post schema
+    Given path '/posts/1'
     When method get
     Then status 200
-    And match response.data ==
+    And match response ==
     """
     {
+      userId: '#number',
       id: '#number',
-      name: '#string',
-      year: '#number',
-      color: '#string',
-      pantone_value: '#string'
+      title: '#string',
+      body: '#string'
     }
     """
 
-  Scenario Outline: Get resources by valid IDs
-    Given path '/unknown/<resourceId>'
+  Scenario Outline: Get posts by valid IDs
+    Given path '/posts/<postId>'
     When method get
     Then status 200
-    And match response.data.id == <resourceId>
-    And match response.data.name == '<expectedName>'
+    And match response.id == <postId>
 
     Examples:
-      | resourceId | expectedName    |
-      | 1          | cerulean        |
-      | 2          | fuchsia rose    |
-      | 3          | true red        |
+      | postId |
+      | 1      |
+      | 2      |
+      | 3      |
 
-  Scenario: Verify resource list pagination
-    Given path '/unknown'
-    And param page = 1
+  Scenario: Verify post list pagination with _limit
+    Given path '/posts'
+    And param _limit = 10
     When method get
     Then status 200
-    And match response contains { page: 1, per_page: '#number', total: '#number' }
-    And assert response.total >= response.per_page
+    And match response == '#[10]'

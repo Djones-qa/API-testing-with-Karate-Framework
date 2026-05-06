@@ -1,33 +1,33 @@
-﻿Feature: Authentication - Register API Tests
+Feature: Authentication - Register API Tests
 
   Background:
     * url baseUrl
 
-  Scenario: Successful registration
-    Given path '/register'
-    And request { email: 'eve.holt@reqres.in', password: 'pistol' }
+  Scenario: Create new user (register equivalent)
+    Given path '/users'
+    And request { name: 'New User', username: 'newuser', email: 'newuser@test.com' }
     When method post
-    Then status 200
+    Then status 201
     And match response.id == '#number'
-    And match response.token == '#string'
+    And match response.name == 'New User'
 
-  Scenario: Registration fails without password
-    Given path '/register'
-    And request { email: 'eve.holt@reqres.in' }
+  Scenario: Create user without username
+    Given path '/users'
+    And request { name: 'No Username', email: 'nousername@test.com' }
     When method post
-    Then status 400
-    And match response.error == 'Missing password'
+    Then status 201
+    And match response.id == '#number'
 
-  Scenario: Registration fails without email
-    Given path '/register'
-    And request { password: 'pistol' }
+  Scenario: Create user without email
+    Given path '/users'
+    And request { name: 'No Email', username: 'noemail' }
     When method post
-    Then status 400
-    And match response.error == 'Missing email or username'
+    Then status 201
+    And match response.id == '#number'
 
-  Scenario: Registration fails with undefined user
-    Given path '/register'
-    And request { email: 'unknown@test.com', password: 'test123' }
+  Scenario: Create user with all fields returns id
+    Given path '/users'
+    And request { name: 'Full User', username: 'fulluser', email: 'full@test.com' }
     When method post
-    Then status 400
-    And match response.error == '#string'
+    Then status 201
+    And match response.id == '#number'

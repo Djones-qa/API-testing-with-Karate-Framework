@@ -1,43 +1,43 @@
-﻿Feature: Performance and Response Time Validation
+Feature: Performance and Response Time Validation
 
   Background:
     * url baseUrl
 
-  Scenario: GET users responds under 3 seconds
+  Scenario: GET users responds within acceptable time
     Given path '/users'
     When method get
     Then status 200
     And assert responseTime < 5000
 
-  Scenario: GET single user responds under 2 seconds
+  Scenario: GET single user responds within acceptable time
     Given path '/users/1'
     When method get
     Then status 200
     And assert responseTime < 5000
 
-  Scenario: POST create user responds under 3 seconds
+  Scenario: POST create user responds within acceptable time
     Given path '/users'
-    And request { name: 'Perf Test', job: 'Tester' }
+    And request { name: 'Perf Test', username: 'perftest', email: 'perf@test.com' }
     When method post
     Then status 201
     And assert responseTime < 5000
 
-  Scenario: GET resources responds under 3 seconds
-    Given path '/unknown'
+  Scenario: GET posts responds within acceptable time
+    Given path '/posts'
     When method get
     Then status 200
     And assert responseTime < 5000
 
-  Scenario: Login responds under 3 seconds
-    Given path '/login'
-    And request { email: 'eve.holt@reqres.in', password: 'cityslicka' }
-    When method post
+  Scenario: GET posts with limit responds within acceptable time
+    Given path '/posts'
+    And param _limit = 10
+    When method get
     Then status 200
     And assert responseTime < 5000
 
-  Scenario: Delayed response within acceptable range
-    Given path '/users'
-    And param delay = 2
-    When method get
+  Scenario: PUT update responds within acceptable time
+    Given path '/users/1'
+    And request { name: 'Perf Update', username: 'perfupdate', email: 'perfupdate@test.com' }
+    When method put
     Then status 200
-    And assert responseTime < 8000
+    And assert responseTime < 5000

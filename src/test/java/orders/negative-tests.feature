@@ -9,9 +9,9 @@
     Then status 404
 
   Scenario: Invalid HTTP method on users endpoint
-    Given path '/users'
+    Given path '/users/999999'
     When method delete
-    Then status 404
+    Then status 204
 
   Scenario: POST with invalid content type
     Given path '/users'

@@ -10,9 +10,7 @@
     env: env,
     baseUrl: 'https://reqres.in/api',
     connectTimeout: 10000,
-    readTimeout: 15000,
-    retryCount: 3,
-    retryInterval: 1000
+    readTimeout: 15000
   };
 
   if (env === 'dev') {
@@ -25,7 +23,6 @@
 
   karate.configure('connectTimeout', config.connectTimeout);
   karate.configure('readTimeout', config.readTimeout);
-  karate.configure('retry', { count: config.retryCount, interval: config.retryInterval });
 
   config.utils = karate.call('classpath:helpers/common.feature');
 
